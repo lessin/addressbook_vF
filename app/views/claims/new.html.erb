@@ -1,0 +1,51 @@
+
+  <div class="container-fluid">
+    <nav class="navbar navbar-default navbar-fixed-top" role="navigation">
+      <div class="container">
+        <a href="/">
+        <div class="navbar-header">
+          <%= image_tag "the-logo.png", class:"navbar-brand" %>
+        </a>
+        </div>
+
+        <% if @current_user == nil %>
+          <p class="navbar-text navbar-right"><a href = "/About">About</a></p>
+          <p class="navbar-text navbar-right"><a href = "/Team">Team</a></p>
+          <p class="navbar-text navbar-right"><%= link_to("Sign up", controller: 'access', action: 'new') %></p>
+        <% elsif @current_user.admin == true %>
+          <p class="navbar-text navbar-right"><a href = "/logout">Logout</a></p>
+          <p class="navbar-text navbar-right"><%= link_to("+ claim", new_claim_path) %> | </p>
+          <p class="navbar-text navbar-right"><a href = "/users/<%=@current_user.id%>/edit"><%= @current_user.username %></a> | </p>
+        <% else %>
+          <p class="navbar-text navbar-right"><a href = "/logout">logout</a></p>
+          <p class="navbar-text navbar-right"><%= link_to("+ claim", new_claim_path) %> | </p>
+          <p class="navbar-text navbar-right"><%= @current_user.username %> | </p>
+        <% end %>
+    </nav>
+
+  <div class="row">
+    <div class="col-md-8 col-md-offset-2">
+
+    <h1>Brute New Claim Form</h1>
+
+      <%= form_for(@claim, url: claims_path) do |f|%>
+
+      <div class="form-group">
+        <%= f.label(:subject,  class: "control-label") %>
+        <%= f.text_field(:subject,  class: "form-control") %>
+      </div>
+
+      <div class="form-group">
+        <%= f.label(:verb,  class: "control-label") %>
+        <%= f.text_field(:verb,  class: "form-control") %>
+      </div>
+
+      <div class="form-group">
+        <%= f.label(:object,  class: "control-label") %>
+        <%= f.text_field(:object,  class: "form-control") %>
+      </div>
+
+      <%= f.submit("addit", class: "btn btn-lg btn-info", id: "done") %>
+
+      <% end %>
+

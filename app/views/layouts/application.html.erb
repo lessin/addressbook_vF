@@ -2,11 +2,36 @@
 <html>
 <head>
   <title>AddressBookF</title>
-  <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track' => true %>
-  <%= javascript_include_tag 'application', 'data-turbolinks-track' => true %>
-  <%= csrf_meta_tags %>
+    <script src="https://code.jquery.com/jquery-1.10.2.js"></script>
+    <script src="https://code.jquery.com/ui/1.11.2/jquery-ui.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.0/js/bootstrap.min.js"></script>
+    <script src="https://js.braintreegateway.com/v2/braintree.js"></script>
+    <script src="http://www.parsecdn.com/js/parse-1.2.13.min.js"></script>
+    <!-- <script src="assets/handlebars-v2.0.0-1.js"></script> -->
+
+    <meta name="viewport" content="initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap-flat.css">
+    <link rel="stylesheet" href="/vendor/runningCoder/js/jquery.typeahead.css">
+
+    <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track' => true %>
+    <%= javascript_include_tag 'application', 'data-turbolinks-track' => true %>
+    <%= csrf_meta_tags %>
+
+  <script>
+      $(window).load(function (){
+      // $('.box').fadeTo(1000,0, function(){})
+
+      $( '.fader' ).each(function( i ) {
+        $( this ).fadeOut( 3000 );
+      });
+    });
+  </script>
+
 </head>
 <body>
+
+
 
 <%= yield %>
 

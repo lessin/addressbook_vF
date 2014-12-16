@@ -1,0 +1,142 @@
+@font-face { font-family: MetaSerifBook; src: url('fonts/MetaSerifComp-Book.ttf'); format('truetype')}
+@font-face { font-family: MetaCompBold; src: url('fonts/MetaComp-Bold.ttf'); format('truetype')}
+@font-face { font-family: MetaCompNormal; src: url('fonts/MetaComp-Normal.ttf'); format('truetype')}
+
+.container-fluid{
+  min-width:1300px;
+  margin-top:100px;
+}
+
+.logo{
+  max-height: 40px;
+}
+
+.mark{
+  position:absolute;
+  margin-top: 100px;
+  margin-left: 300px;
+  width: 80px;
+}
+
+.banner{
+  background: #fafafa;
+  height: 55px;
+  text-align: center;
+}
+
+.simplenotice{
+  padding-top:15px;
+  margin-top: -50px;
+}
+
+.image{
+  height:170px;
+  width: 305px;
+  background: #808080;
+}
+
+.bigphoto{
+  height:500px;
+  width: 975px;
+  background: #808080;
+  margin-top: -50px;
+}
+
+.single-page-title{
+  background-color: blue;
+  display: inline;
+}
+
+.spaced{
+  padding-bottom: 10px;
+}
+
+h1 {
+  font-family: MetaCompBold, Helvetica, Arial, sans-serif;
+  font-weight: normal;
+  font-size: 42px;
+  color: #333333;
+  line-height: 61.6px;
+  margin-top: -10px;
+  margin-bottom: -10px;
+}
+
+h2 {
+  font-family: MetaCompBold, Helvetica, Arial, sans-serif;
+  font-weight: normal;
+  font-size: 22px;
+  color: #333333;
+  line-height: 61.6px;
+  margin-top: 0px;
+  margin-bottom: -10px;
+}
+
+
+.slug{
+  font-family: MetaCompBold, Helvetica, Arial, sans-serif;
+  color: #ed403a;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+}
+
+.big-input{
+  height: 50px;
+  font-size: 25px;
+  margin-bottom: 15px;
+}
+
+.subhead {
+  font-family: MetaCompBold;
+  font-size: 16px;
+  color: #ed403a;
+  line-height: 0;
+  letter-spacing: 1.4px;
+}
+
+.alert{
+  margin-bottom: 50px;
+}
+
+a{
+  color: #333333;
+}
+
+.footface{
+  height: 1000px;
+  background: #fafafa;
+  margin-top: 100px;
+}
+
+.project-tag{
+  margin-top: 5px;
+}
+
+.verb-typeahead{
+  width: 33%;
+}
+
+.object-typeahead{
+  width: 10%;
+  height: 25px;
+  padding: 5px 5px;
+  font-size: 12px;
+  line-height: 1.42857143;
+}
+
+.result{
+  background: rgb(240, 240, 240);
+  border-color: rgb(194, 194, 194);
+  width: 200px;
+  border-style: solid;
+  border-width: 1px;
+  padding-left: 20px;
+  padding-top: 5px;
+  margin-top: 0px;
+  margin-left: 15px;
+}
+
+.result h4{
+  font-size: 14px;
+  font-weight: 300;
+  line-height: 0;
+}
