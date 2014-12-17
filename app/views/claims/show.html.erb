@@ -37,12 +37,12 @@
           <span id="verbs">
             <% @claims.each do | obj | %>
               <% if obj.verb == verb.verb && obj.object != nil %>
-                <span class="project-tag btn btn-info btn-sm" ><%= obj.object %></span>
+                <span class="project-tag btn btn-info btn-sm" id="<%= obj.object %>"><%= obj.object %></span>
               <% end %>
             <% end %>
           </span>
-            <input id="newobj" name="newobj"  class="form-control object-typeahead newobj" placeholder="add object" autocomplete="off" autofocus>
-            <div class="objupdate"></div>
+            <input id="<%= verb.verb %>" name="newobj" class="form-control object-typeahead newobj" placeholder="add object" autocomplete="off" autofocus>
+            <div id="result<%= verb.verb %>"></div>
           </div>
       <% end %>
     <% end %>
@@ -68,66 +68,71 @@ function getVerbs(){
   });
 }
 
+
 $.when(getVerbs()).done(function(data){
-  console.log(data);
-
-  $('#newverb').keyup(function() {
+  $('#newverb').keyup(function(e) {
     if (this.value.length > 2){
-
-      console.log(this.value);
 
       var output = '<div class="result">';
       var searchField = $('#newverb').val();
       var myExp = new RegExp(searchField, "i");
 
-      data.forEach(function(val,key){
-
-        if (val.subject.search(myExp) != -1){
-          console.log (val.subject);
-          output += '<h4 class="typeaheadresult"><a href="claims/' + val.subject +'">' + val.subject + '</h4>';
-          output += '<br>';
-        }
-      });
-
-    $('#update').html(output);
-
-    $('.typeaheadresult').hover (function (){
-        var result = $(this).text();
-        $('#newverb').val(result);
-    });
-
-    $('.typeaheadresult').click (function (){
-        console.log("clicked");
-        var result = $(this).text();
-        event.preventDefault();
-        $.ajax({
-              type: "POST",
-              url: "<%= claims_path %>"+ ".json",
-              data: {"claim[subject]": "<%= @claims.first.subject %>", "claim[subject_uid]": "<%= @claims.first.subject_uid %>" , "claim[verb]": result },
-              success: function(data) {
-                console.log(data);
-                location.href="/claims/"+ data;
-            }
-          });
-        });
-
-    $('#newverb').keypress(function (e){
       if (e.which == 13 ) {
         e.preventDefault();
-        var result = $(this).text();
         $.ajax({
               type: "POST",
               url: "<%= claims_path %>"+ ".json",
-              data: {"claim[subject]": "<%= @claims.first.subject %>", "claim[subject_uid]": "<%= @claims.first.subject_uid %>" , "claim[verb]": result },
+              data: {"claim[subject]": "<%= @claims.first.subject %>", "claim[subject_uid]": "<%= @claims.first.subject_uid %>" , "claim[verb]": searchField },
               success: function(data) {
                 console.log(data);
                 location.href="/claims/"+ data;
+              }
+            });
+        } else {
+
+          console.log(this.value);
+
+          data.forEach(function(val,key){
+
+            if (val.subject.search(myExp) != -1){
+              console.log (val.subject);
+              output += '<h4 class="typeaheadresult"><a href="claims/' + val.subject +'">' + val.subject + '</h4>';
+              output += '<br>';
             }
           });
-        }});
-    }
+
+          $('#update').html(output);
+
+          $('.typeaheadresult').hover (function (){
+              var result = $(this).text();
+              $('#newverb').val(result);
+          });
+
+          $('.typeaheadresult').click (function (){
+              console.log("clicked");
+              var result = $(this).text();
+              event.preventDefault();
+              $.ajax({
+                    type: "POST",
+                    url: "<%= claims_path %>"+ ".json",
+                    data: {"claim[subject]": "<%= @claims.first.subject %>", "claim[subject_uid]": "<%= @claims.first.subject_uid %>" , "claim[verb]": result },
+                    success: function(data) {
+                      console.log(data);
+                      location.href="/claims/"+ data;
+                  }
+                });
+          });
+        }
+      }
+    });
   });
-});
+
+
+
+
+////////////
+
+
 
 
 
@@ -136,65 +141,54 @@ function getObjects(){
   });
 }
 
-
 $.when(getObjects()).done(function(data){
+
   console.log(data);
+  ids = [];
 
-  $('.newobj').keyup(function() {
-    if (this.value.length > 2){
+  $('.newobj').each(function(i, obj) {
+    ids.push(this.id);
+  });
 
-      console.log(this.value);
+  $.each(ids, function (){
+    $("#" + this).keyup( function (e){
 
-      var output = '<div class="result">';
-      var searchField = $('.newobj').val();
-      var myExp = new RegExp(searchField, "i");
+      if (this.value.length > 2){
 
-      data.forEach(function(val,key){
+        if (e.which == 13 ) {
+        event.preventDefault();
+        var result = $(this).text();
+        $.ajax({
+              type: "POST",
+              url: "<%= claims_path %>"+ ".json",
+              data: {"claim[subject]": "<%= @claims.first.subject %>", "claim[subject_uid]": "<%= @claims.first.subject_uid %>" , "claim[verb]": result },
+              success: function(data) {
+                console.log(data);
+                location.href="/claims/"+ data;
+            }
+          });
+        } else {
 
-        if (val.subject.search(myExp) != -1){
-          console.log (val.subject);
-          output += '<h4 class="objtypeaheadresult"><a href="claims/' + val.subject +'">' + val.subject + '</h4>';
-          output += '<br>';
+          var output = '<div class="result">';
+          var searchField = $(this).val();
+          var myExp = new RegExp(searchField, "i");
+          var outputid = "#result" + this.id;
+          console.log(searchField + ' '+ this.id);
+
+          data.forEach(function(val,key){
+
+            if (val.subject.search(myExp) != -1){
+              console.log (val.subject + "result");
+              output += '<h4 class="typeaheadresult"><a href="claims/' + val.subject +'">' + val.subject + '</h4>';
+              output += '<br>';
+            }
+          });
+
+          $(outputid).html(output);
+
         }
-      });
-
-    $('.objupdate').html(output);
-
-    $('.typeaheadresult').hover (function (){
-        var result = $(this).text();
-        $('#newverb').val(result);
+      }
     });
-
-    $('.typeaheadresult').click (function (){
-        console.log("clicked");
-        var result = $(this).text();
-        event.preventDefault();
-        $.ajax({
-              type: "POST",
-              url: "<%= claims_path %>"+ ".json",
-              data: {"claim[subject]": "<%= @claims.first.subject %>", "claim[subject_uid]": "<%= @claims.first.subject_uid %>" , "claim[verb]": result },
-              success: function(data) {
-                console.log(data);
-                location.href="/claims/"+ data;
-            }
-          });
-        });
-
-    $('#newverb').keypress(function (e){
-      if (e.which == 13 ) {
-        event.preventDefault();
-        var result = $(this).text();
-        $.ajax({
-              type: "POST",
-              url: "<%= claims_path %>"+ ".json",
-              data: {"claim[subject]": "<%= @claims.first.subject %>", "claim[subject_uid]": "<%= @claims.first.subject_uid %>" , "claim[verb]": result },
-              success: function(data) {
-                console.log(data);
-                location.href="/claims/"+ data;
-            }
-          });
-        }});
-    }
   });
 });
 
@@ -203,21 +197,5 @@ $.when(getObjects()).done(function(data){
 
 
 
-
-//       $(".addlink").click (function (){
-//         console.log("clicked");
-//           $.ajax({
-//               type: "POST",
-//               url: "<%= claims_path %>",
-//               data: {"claim[subject]": searchField, "claim[verb]": "exists"},
-//               success: function(data) {
-//                 console.log(data);
-//                 location.href="/claims/"+ data;
-//             }
-//         });
-//       });
-//     }
-// });
-// });
 
 </script>
