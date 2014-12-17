@@ -24,6 +24,19 @@ class Claim < ActiveRecord::Base
   end
 
 
+  def self.get_objects
+    @objects = Claim.where("verb = ? AND object = ?", "is", "object")
+    @unique_objects = []
+
+    @objects.each do |unique|
+      if @unique_objects.index(unique.subject) == nil
+        @unique_objects << {subject: unique.subject, count: 1}
+      end
+    end
+    return @unique_objects
+  end
+
+
   def self.get_subjects
     @claims = Claim.all
     @unique_subjects = Claim.where("verb = ?", "exists")

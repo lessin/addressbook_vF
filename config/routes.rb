@@ -15,6 +15,7 @@ Rails.application.routes.draw do
 
   get 'get_subjects', to: 'claims#return_subjects'
   get 'get_verbs', to: 'claims#return_verbs'
+  get 'get_objects', to: 'claims#return_objects'
 
   resources :claims
 

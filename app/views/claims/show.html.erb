@@ -31,9 +31,9 @@
 
     <% @claims.each do | verb | %>
       <% if verb.verb != "exists" && verb.verb != "is" %>
-        <div>
         <hr>
         <h2><%= verb.verb %></h2>
+          <div class="verblock">
           <span id="verbs">
             <% @claims.each do | obj | %>
               <% if obj.verb == verb.verb && obj.object != nil %>
@@ -41,27 +41,19 @@
               <% end %>
             <% end %>
           </span>
-
-
-        <form action="/" method="GET">
-          <input id="newobj" name="newobj"  class="form-control object-typeahead" placeholder="add object" autocomplete="off" autofocus>
-        </form>
-        </div>
+            <input id="newobj" name="newobj"  class="form-control object-typeahead newobj" placeholder="add object" autocomplete="off" autofocus>
+            <div class="objupdate"></div>
+          </div>
       <% end %>
     <% end %>
 
     <hr>
-      <div class = "typeahead-container">
 
-        <form id="verb" name="" action="">
-          <span class="typeahead-query">
-            <input id="newverb" class="form-control typeahead verb-typeahead" nplaceholder="add verb" autocomplete="off" autofocus>
-          </span>
+    <span class="typeahead-query">
+      <input id="newverb" class="form-control typeahead verb-typeahead" nplaceholder="add verb" autocomplete="off" autofocus>
+    </span>
 
-          <div class="typeahead-result"></div>
-        </form>
-      </div>
-      <div id="update"></div>
+    <div id="update"></div>
 
     </div>
   </div>
@@ -71,12 +63,12 @@
 <script type="text/javascript">
 
 
-function getData(){
+function getVerbs(){
   return $.getJSON('/get_verbs', function(data){
   });
 }
 
-$.when(getData()).done(function(data){
+$.when(getVerbs()).done(function(data){
   console.log(data);
 
   $('#newverb').keyup(function() {
@@ -119,9 +111,9 @@ $.when(getData()).done(function(data){
           });
         });
 
-    $('#newverb').submit(function (event){
-        event.preventDefault();
-        console.log("clicked");
+    $('#newverb').keypress(function (e){
+      if (e.which == 13 ) {
+        e.preventDefault();
         var result = $(this).text();
         $.ajax({
               type: "POST",
@@ -132,10 +124,83 @@ $.when(getData()).done(function(data){
                 location.href="/claims/"+ data;
             }
           });
-        });
+        }});
     }
   });
 });
+
+
+
+function getObjects(){
+  return $.getJSON('/get_objects', function(data){
+  });
+}
+
+
+$.when(getObjects()).done(function(data){
+  console.log(data);
+
+  $('.newobj').keyup(function() {
+    if (this.value.length > 2){
+
+      console.log(this.value);
+
+      var output = '<div class="result">';
+      var searchField = $('.newobj').val();
+      var myExp = new RegExp(searchField, "i");
+
+      data.forEach(function(val,key){
+
+        if (val.subject.search(myExp) != -1){
+          console.log (val.subject);
+          output += '<h4 class="objtypeaheadresult"><a href="claims/' + val.subject +'">' + val.subject + '</h4>';
+          output += '<br>';
+        }
+      });
+
+    $('.objupdate').html(output);
+
+    $('.typeaheadresult').hover (function (){
+        var result = $(this).text();
+        $('#newverb').val(result);
+    });
+
+    $('.typeaheadresult').click (function (){
+        console.log("clicked");
+        var result = $(this).text();
+        event.preventDefault();
+        $.ajax({
+              type: "POST",
+              url: "<%= claims_path %>"+ ".json",
+              data: {"claim[subject]": "<%= @claims.first.subject %>", "claim[subject_uid]": "<%= @claims.first.subject_uid %>" , "claim[verb]": result },
+              success: function(data) {
+                console.log(data);
+                location.href="/claims/"+ data;
+            }
+          });
+        });
+
+    $('#newverb').keypress(function (e){
+      if (e.which == 13 ) {
+        event.preventDefault();
+        var result = $(this).text();
+        $.ajax({
+              type: "POST",
+              url: "<%= claims_path %>"+ ".json",
+              data: {"claim[subject]": "<%= @claims.first.subject %>", "claim[subject_uid]": "<%= @claims.first.subject_uid %>" , "claim[verb]": result },
+              success: function(data) {
+                console.log(data);
+                location.href="/claims/"+ data;
+            }
+          });
+        }});
+    }
+  });
+});
+
+
+
+
 
 
 

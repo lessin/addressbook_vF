@@ -27,12 +27,8 @@
   <div class="row">
     <div class="col-md-8 col-md-offset-2">
 
-    <form action="/" method="GET">
-      <input id="query" name="term"  class="form-control big-input" placeholder="search for anyone" autocomplete="off" autofocus>
-    </form>
-
-    <div id="update"></div>
-
+      <input id="query" name="term" class="form-control big-input" placeholder="search for anyone" autocomplete="off" autofocus>
+      <div id="update"></div>
 
     </div>
   </div>
@@ -49,44 +45,58 @@ function getData(){
 $.when(getData()).done(function(data){
   console.log(data);
 
-  $('#query').keyup(function() {
+  $('#query').keyup(function(e) {
     if (this.value.length > 2){
-      console.log(this.value.length );
 
       var output = '<div class="response">';
       var searchField = $('#query').val();
       var myExp = new RegExp(searchField, "i");
 
-      data.forEach(function(val,key){
-
-        if (val.subject != null && val.subject.search(myExp) != -1) {
-            output += '<h2><a href="claims/' + val.subject_uid +'">' + val.subject + '</a><small> person</small></h2>';
-          output += '<hr>';
-        }});
-
-        if(!searchField) {
-          output = '';
+      if (e.which == 13 ) {
+        e.preventDefault();
+          $.ajax({
+            type: "POST",
+            url: "<%= claims_path %>",
+            data: {"claim[subject]": searchField, "claim[verb]": "exists"},
+            success: function(data) {
+              console.log(data);
+              location.href="/claims/"+ data;
+            }
+          });
         } else {
 
-        output += '<h2><a class= "addlink" href="#' + searchField + '">+ add '+ searchField + ' as new subject</a></h2>';
-        output += '</div>';
-        }
+          console.log(this.value.length );
+          data.forEach(function(val,key){
 
-      $('#update').html(output);
-      $(".addlink").click (function (){
-        console.log("clicked");
-          $.ajax({
-              type: "POST",
-              url: "<%= claims_path %>",
-              data: {"claim[subject]": searchField, "claim[verb]": "exists"},
-              success: function(data) {
-                console.log(data);
-                location.href="/claims/"+ data;
-            }
-        });
+              if (val.subject != null && val.subject.search(myExp) != -1) {
+                  output += '<h2><a href="claims/' + val.subject_uid +'">' + val.subject + '</a><small> person</small></h2>';
+                output += '<hr>';
+              }});
+
+              if(!searchField) {
+                output = '';
+              } else {
+
+              output += '<h2><a class= "addlink" href="#' + searchField + '">+ add '+ searchField + ' as new subject</a></h2>';
+              output += '</div>';
+              }
+
+            $('#update').html(output);
+            $(".addlink").click (function (){
+              console.log("clicked");
+                $.ajax({
+                    type: "POST",
+                    url: "<%= claims_path %>",
+                    data: {"claim[subject]": searchField, "claim[verb]": "exists"},
+                    success: function(data) {
+                      console.log(data);
+                      location.href="/claims/"+ data;
+                  }
+                });
+              });
+          }
+        }
       });
-    }
-});
-});
+    });
 
 </script>

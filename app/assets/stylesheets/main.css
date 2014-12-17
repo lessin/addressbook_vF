@@ -107,6 +107,20 @@ a{
   margin-top: 100px;
 }
 
+.verblock{
+  display: inline-flex;
+}
+
+input#newobj{
+  width: 100px;
+  margin-top: 5px;
+  margin-left: 10px;
+  font-size: 14px;
+  height: 31px;
+  padding: 8px 5px;
+}
+
+
 .project-tag{
   margin-top: 5px;
 }

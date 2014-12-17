@@ -8,8 +8,6 @@ class ClaimsController < ApplicationController
 def index
 end
 
-
-
 #get json for a verbs typeahead
 def return_verbs
   @verbs = Claim.get_verbs
@@ -21,6 +19,12 @@ def return_subjects
   render :json => @subject
 end
 
+def return_objects
+  @objects = Claim.get_objects
+  render :json => @objects
+end
+
+
 
 
 #bruteforce claim creation, admin only
@@ -30,10 +34,10 @@ end
 
 
 def create
-  binding.pry
   @claim_verb = params[:claim][:verb]
   @claim_object = params[:claim][:object]
   @claim_subject = params[:claim][:subject]
+  @claim_subject_uid = params[:claim][:subject_uid]
 
     if @claim_verb != "exists"
 
@@ -66,7 +70,7 @@ def create
       end
 
       respond_to do |format|
-        format.json { render :json => @claim_verb }
+        format.json { render :json => @claim_subject_uid }
         format.html { redirect_to(claims_path) }
       end
 
@@ -86,7 +90,6 @@ end
 
 def show
   @claims = Claim.where("subject_uid = ?", params[:id])
-
 end
 
 
